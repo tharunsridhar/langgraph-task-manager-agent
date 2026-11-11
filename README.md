@@ -45,3 +45,5 @@ pytest -q
 This swaps in a scripted `FakeModel` but still exercises the real graph, real
 tools, real interrupt/resume and real SQLite storage — a pattern worth reusing
 whenever you add features to an agent.
+
+<!-- last updated: 2026-11-11 -->
