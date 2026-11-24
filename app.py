@@ -14,6 +14,7 @@ from langgraph.types import Command
 from pydantic import BaseModel, Field
 
 import db
+import tracing
 from agent import build_graph
 
 BASE_DIR = Path(__file__).parent
@@ -58,6 +59,15 @@ def config_for(thread_id: str) -> dict:
     return {"configurable": {"thread_id": thread_id}}
 
 
+def run_config_for(thread_id: str) -> dict:
+    """Config for a graph run: adds the Opik tracer when tracing is configured."""
+    config = config_for(thread_id)
+    callbacks = tracing.get_callbacks(thread_id)
+    if callbacks:
+        config["callbacks"] = callbacks
+    return config
+
+
 def pending_confirm(thread_id: str):
     """If this thread is paused on a confirmation, return its payload."""
     state = graph.get_state(config_for(thread_id))
@@ -65,7 +75,7 @@ def pending_confirm(thread_id: str):
 
 
 def run_graph(graph_input, thread_id: str) -> dict:
-    config = config_for(thread_id)
+    config = run_config_for(thread_id)
     try:
         result = graph.invoke(graph_input, config)
     except Exception as exc:  # model/API errors should reach the UI, not crash it
