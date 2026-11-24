@@ -42,7 +42,9 @@ SCRIPT = [
 import agent  # noqa: E402
 
 _real_build = agent.build_graph
-agent.build_graph = lambda checkpointer=None: _real_build(model=FakeModel(SCRIPT), checkpointer=checkpointer)
+agent.build_graph = lambda model=None, checkpointer=None: _real_build(
+    model=model or FakeModel(SCRIPT), checkpointer=checkpointer
+)
 
 import app as app_module  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402

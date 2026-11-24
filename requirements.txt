@@ -7,6 +7,9 @@ langchain-groq
 python-dotenv
 pydantic
 
+# optional tracing (only active when Opik is configured, see tracing.py)
+opik
+
 # for running the tests
 pytest
 httpx
